@@ -247,6 +247,14 @@ function buildMap(world) {
     paper.moveTo(0, pz(z)); paper.lineTo(width, pz(z));
   }
   paper.stroke();
+
+  paper.beginPath();
+  for (const [x, z] of world.trail) paper.lineTo(px(x), pz(z));
+  paper.lineWidth = 2.5;
+  paper.strokeStyle = '#ccb48baa';
+  paper.setLineDash([6, 4]);
+  paper.stroke();
+  paper.setLineDash([]);
   const scaleLabel = find('scale');
   scaleLabel.style.width = `${20 * scale / width * 100}%`;
 
@@ -254,6 +262,7 @@ function buildMap(world) {
     dock: ['anchor', '開闊水域'],
     inlet: ['leaf', '蘆葦與淺水'],
     rocks: ['mountain', '岩壁與深水'],
+    north: ['map-pin', '松林與緩坡'],
   };
   let selectedSpot;
   const labels = world.spots.map((spot) => {
@@ -370,9 +379,15 @@ function runGame() {
   let pitch = -0.09;
   let started = false;
   let aimDrag;
+  let lockPending = false;
+  let lockFailed = false;
+  let lockWorked = false;
   const keys = new Set();
   const actions = new Set();
   const touch = matchMedia('(pointer: coarse)');
+  const lookButton = find('look');
+  const lookStatus = find('look-status');
+  const mouseLocked = () => document.pointerLockElement === canvas;
   const updateMap = buildMap(world);
   const fishing = createFishing(scene, camera, world, { onState: updateHud, onCatch: showCatch, onSound: audio.play });
   loadTripoProp(scene, world);
@@ -395,6 +410,7 @@ function runGame() {
     find('touch').hidden = !touch.matches;
     canvas.focus({ preventScroll: true });
     audio.activate();
+    updateLookStatus();
   }
 
   function buttonDown(source) {
@@ -420,27 +436,64 @@ function runGame() {
 
   function rotate(dx, dy) {
     yaw -= dx * 0.0042;
-    pitch = THREE.MathUtils.clamp(pitch - dy * 0.0042, -0.78, 0.58);
+    tilt(-dy * 0.0042);
   }
 
-  const accepted = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight', 'Space', 'KeyR']);
-  find('start').onclick = start;
-  find('look').onclick = () => {
-    start();
-    if (document.pointerLockElement === canvas) document.exitPointerLock();
-    else {
-      try {
-        const locking = canvas.requestPointerLock?.();
-        locking?.catch(() => {});
-      } catch {}
+  function tilt(delta) {
+    pitch = THREE.MathUtils.clamp(pitch + delta, -1.35, 1.25);
+  }
+
+  function updateLookStatus() {
+    const locked = mouseLocked();
+    lookButton.setAttribute('aria-pressed', String(locked));
+    lookButton.title = locked ? '釋放滑鼠（Esc）' : '使用滑鼠環視';
+    lookButton.setAttribute('aria-label', lookButton.title);
+    lookStatus.hidden = !started || touch.matches;
+    lookStatus.textContent = locked ? 'Esc 釋放游標' : lockFailed ? '按住右鍵拖曳環視' : '點畫面使用滑鼠環視';
+  }
+
+  function lockError() {
+    if (!lockPending || mouseLocked()) return;
+    lockPending = false;
+    // Browsers can reject a new request briefly after the native Escape gesture.
+    lockFailed = !lockWorked;
+    updateLookStatus();
+  }
+
+  function captureMouse() {
+    if (mouseLocked() || lockPending) return;
+    lockPending = true;
+    try {
+      if (canvas.requestPointerLock) canvas.requestPointerLock()?.catch(lockError);
+      else lockError();
+    } catch {
+      lockError();
     }
+  }
+
+  const accepted = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ShiftLeft', 'ShiftRight', 'ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight', 'Space', 'KeyR']);
+  find('start').onclick = (event) => {
+    start();
+    if (event.detail > 0 && event.pointerType !== 'touch' && !touch.matches) captureMouse();
+  };
+  lookButton.onclick = () => {
+    start();
+    canvas.focus({ preventScroll: true });
+    if (mouseLocked()) document.exitPointerLock();
+    else captureMouse();
   };
   document.addEventListener('pointerlockchange', () => {
-    if (document.pointerLockElement !== canvas) releaseControls();
-    find('look').title = document.pointerLockElement === canvas ? '按 ESC 解除滑鼠鎖定' : '鎖定視角';
+    lockPending = false;
+    if (mouseLocked()) {
+      lockWorked = true;
+      lockFailed = false;
+    } else releaseControls();
+    updateLookStatus();
   });
+  document.addEventListener('pointerlockerror', lockError);
   window.addEventListener('keydown', (event) => {
     if (help.open || journal.open || event.altKey || event.metaKey || event.ctrlKey || !accepted.has(event.code)) return;
+    if (!started && event.key === 'Shift') return;
     if (event.code === 'Space' && event.target instanceof HTMLButtonElement) return;
     event.preventDefault();
     if (!started) {
@@ -456,31 +509,45 @@ function runGame() {
     if (event.code === 'Space') buttonUp('keyboard');
   });
   window.addEventListener('blur', releaseControls);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) releaseControls();
+  });
   for (const opener of [find('open-journal'), find('help')]) {
     opener.addEventListener('click', () => {
       releaseControls();
-      if (document.pointerLockElement === canvas) document.exitPointerLock();
+      if (mouseLocked()) document.exitPointerLock();
     });
   }
 
   canvas.addEventListener('contextmenu', (event) => event.preventDefault());
   canvas.addEventListener('pointerdown', (event) => {
+    if (mouseLocked()) return;
     if (!started) {
       start();
-      return;
     }
     canvas.focus({ preventScroll: true });
     if (event.pointerType === 'touch' || event.button === 2) {
       aimDrag = { id: event.pointerId, x: event.clientX, y: event.clientY };
       canvas.setPointerCapture(event.pointerId);
-    } else if (event.button === 0) {
+    } else if (event.button === 0 && lockFailed) {
       buttonDown('pointer');
       canvas.setPointerCapture(event.pointerId);
     }
   });
+  canvas.addEventListener('click', (event) => {
+    if (!lockFailed && event.detail > 0 && event.pointerType !== 'touch' && !touch.matches) captureMouse();
+  });
+  canvas.addEventListener('mousedown', (event) => {
+    if (mouseLocked() && event.button === 0) buttonDown('mouse');
+  });
+  window.addEventListener('mouseup', (event) => {
+    if (event.button === 0) buttonUp('mouse');
+  });
+  document.addEventListener('mousemove', (event) => {
+    if (mouseLocked()) rotate(event.movementX, event.movementY);
+  });
   document.addEventListener('pointermove', (event) => {
-    if (document.pointerLockElement === canvas) rotate(event.movementX, event.movementY);
-    else if (aimDrag?.id === event.pointerId) {
+    if (!mouseLocked() && aimDrag?.id === event.pointerId) {
       rotate(event.clientX - aimDrag.x, event.clientY - aimDrag.y);
       aimDrag.x = event.clientX;
       aimDrag.y = event.clientY;
@@ -511,10 +578,13 @@ function runGame() {
 
   function walk(dt) {
     yaw += ((keys.has('ArrowLeft') ? 1 : 0) - (keys.has('ArrowRight') ? 1 : 0)) * dt * 1.65;
-    pitch = THREE.MathUtils.clamp(pitch + ((keys.has('ArrowUp') ? 1 : 0) - (keys.has('ArrowDown') ? 1 : 0)) * dt * 1.15, -0.78, 0.58);
+    tilt(((keys.has('ArrowUp') ? 1 : 0) - (keys.has('ArrowDown') ? 1 : 0)) * dt * 1.15);
     const forward = Number(keys.has('KeyW')) - Number(keys.has('KeyS'));
     const strafe = Number(keys.has('KeyD')) - Number(keys.has('KeyA'));
-    const distance = dt * 4.45 / (Math.hypot(forward, strafe) || 1);
+    const wading = world.wadeDepthAt(position.x, position.z) > 0.07;
+    const running = keys.has('ShiftLeft') || keys.has('ShiftRight');
+    const speed = wading ? 2.45 : running ? 7.35 : 4.45;
+    const distance = dt * speed / (Math.hypot(forward, strafe) || 1);
     const x = position.x + (-Math.sin(yaw) * forward + Math.cos(yaw) * strafe) * distance;
     const z = position.z + (-Math.cos(yaw) * forward - Math.sin(yaw) * strafe) * distance;
     if (world.canMove(x, position.z)) position.x = x;

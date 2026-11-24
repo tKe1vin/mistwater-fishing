@@ -36,7 +36,8 @@
             <span data-compass>北 · 000°</span>
           </div>
           <span class="aim" data-aim aria-hidden="true"></span>
-          <button class="view-button" type="button" data-look title="鎖定視角" aria-label="鎖定視角"><span data-icon="scan-line"></span></button>
+          <span class="view-status" data-look-status role="status" hidden></span>
+          <button class="view-button" type="button" data-look title="使用滑鼠環視" aria-label="使用滑鼠環視" aria-pressed="false"><span data-icon="scan-line"></span></button>
           <div class="briefing" data-briefing>
             <div class="briefing-kicker"><span></span> 松影湖自然保護區</div>
             <div class="briefing-title">霧灣垂釣</div>
@@ -84,9 +85,9 @@
         </div>
         <div class="controls">
           <div class="controls-title"><span data-icon="keyboard"></span> 操作</div>
-          <div><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span> 移動</div>
-          <div><span><kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd></span> 轉視角</div>
-          <div><kbd class="wide-key">空白鍵</kbd> 拋竿／揚竿／收線</div>
+          <div><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span> 移動 <kbd>Shift</kbd> 快跑</div>
+          <div>滑鼠／方向鍵環視</div>
+          <div><kbd class="wide-key">空白鍵</kbd>／左鍵釣魚</div>
           <div><kbd class="wide-key">R</kbd> 收回魚線</div>
         </div>
       </section>
@@ -98,11 +99,11 @@
             <div><h2>湖區地圖</h2><span>松影湖 · 釣點導覽</span></div>
           </div>
           <div class="map-frame">
-            <canvas width="570" height="426" data-map role="img" aria-label="松影湖地圖，標示玩家位置與三處釣點"></canvas>
+            <canvas width="570" height="426" data-map role="img" aria-label="松影湖地圖，標示玩家位置、環湖步道與四處釣點"></canvas>
             <div class="map-north">N<span data-icon="navigation"></span></div>
             <div class="map-scale" data-scale>20 m</div>
           </div>
-          <div class="map-key"><span class="key-player"></span> 目前位置 <span class="key-spot"></span> 釣點</div>
+          <div class="map-key"><span class="key-player"></span> 目前位置 <span class="key-spot"></span> 釣點 <span class="key-trail"></span> 步道</div>
           <div class="spot-list" data-spots aria-label="選擇要追蹤的釣點"></div>
         </section>
         <section class="tip-card">
@@ -117,7 +118,8 @@
   <dialog class="dialog" data-help-dialog>
     <div class="dialog-head"><div><span data-icon="keyboard"></span><h2>釣魚操作</h2></div><button class="icon-button" type="button" data-dismiss aria-label="關閉"><span data-icon="x"></span></button></div>
     <dl class="help-list">
-      <div><dt>找釣點</dt><dd>用 <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 沿岸走。用方向鍵或按住滑鼠右鍵拖曳轉動視角。觸控螢幕可滑動畫面。</dd></div>
+      <div><dt>環視</dt><dd>點進遊戲畫面後，移動滑鼠就能轉視角。按 <kbd>Esc</kbd> 釋放游標，可再點畫面繼續。也可用方向鍵、按住滑鼠右鍵拖曳，或在觸控螢幕上滑動畫面。</dd></div>
+      <div><dt>找釣點</dt><dd>用 <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 沿環湖步道走，按住 <kbd>Shift</kbd> 快跑。也可以離開步道，走進近岸淺水找落點。</dd></div>
       <div><dt>拋竿</dt><dd>讓準星朝向湖面，按住 <kbd>空白鍵</kbd> 或滑鼠左鍵蓄力，再鬆開將浮標拋入水中。</dd></div>
       <div><dt>揚竿</dt><dd>浮標會隨水漂動。等浮標明顯沉下，看到「魚上鉤了」再按一下 <kbd>空白鍵</kbd>。</dd></div>
       <div><dt>收線</dt><dd>按住 <kbd>空白鍵</kbd> 收線。魚線張力升高時放開，等張力降低再收。用 <kbd>R</kbd> 可收回魚線。</dd></div>

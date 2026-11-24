@@ -1,17 +1,18 @@
 # 霧灣垂釣 · Mistwater Fishing
 
-在松影湖沿岸步行，選擇松木棧橋、蘆葦淺灣、岩岸深潭或其他可到達的岸邊。魚種、咬鉤時間和拉力會隨水深與釣點改變。漁獲日誌會記在目前瀏覽器。
+沿環湖步道探索松影湖，在松木棧橋、蘆葦淺灣、岩岸深潭、北岸松林或其他可到達的岸邊垂釣。你也可以走進水深 0.65 公尺以內的淺灘。魚種、咬鉤時間和拉力會隨水深與釣點改變。漁獲日誌會記在目前瀏覽器。
 
 - [線上遊玩](https://tke1vin.github.io/mistwater-fishing/)
-- [實機示範影片（MP4）](https://tke1vin.github.io/mistwater-fishing/downloads/mistwater-fishing-demo.mp4)
+- [初版實機示範影片（MP4）](https://tke1vin.github.io/mistwater-fishing/downloads/mistwater-fishing-demo.mp4)
 - [離線遊戲（ZIP）](https://tke1vin.github.io/mistwater-fishing/downloads/mistwater-fishing-offline.zip)。解壓縮後，用瀏覽器開啟其中的 HTML。
 
 ## 操作
 
 | 操作 | 操控 |
 | --- | --- |
-| 走動 | W、A、S、D |
-| 轉視角 | 方向鍵、滑鼠右鍵拖曳，或點擊畫面右上角鎖定滑鼠 |
+| 走動 | W、A、S、D。按住 Shift 在陸地快跑 |
+| 滑鼠環視 | 點「開始垂釣」後移動滑鼠。按 Esc 釋放游標，點遊戲畫面重新控制視角 |
+| 其他環視方式 | 方向鍵、按住滑鼠右鍵拖曳、在觸控畫面滑動 |
 | 拋竿 | 朝向水面，按住空白鍵或滑鼠左鍵蓄力，鬆開拋出 |
 | 揚竿 | 等浮標往下沉，出現「魚上鉤了」時立刻按一下 |
 | 收線 | 按住空白鍵或滑鼠左鍵收線。張力進入橘區就先鬆手，等下降後再收 |

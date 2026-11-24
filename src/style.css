@@ -35,11 +35,13 @@ h1,h2,p{margin:0}
 .render canvas{display:block;width:100%;height:100%;outline:0}
 .film-mask{pointer-events:none;background:linear-gradient(180deg,#101a1c35,transparent 19%,transparent 65%,#111a1bc0)}
 .stage.in-game .film-mask{background:linear-gradient(180deg,#101a1c35,transparent 18%,transparent 78%,#111a1b60)}
-.orientation,.view-button{position:absolute;top:15px;background:#172522b8;border:1px solid #b2c6b750;border-radius:6px;color:#edf0e5;display:flex;align-items:center;gap:7px;padding:5px 9px;font-size:11px;letter-spacing:.06em}
+.orientation,.view-button,.view-status{position:absolute;top:15px;background:#172522b8;border:1px solid #b2c6b750;border-radius:6px;color:#edf0e5;display:flex;align-items:center;gap:7px;padding:5px 9px;font-size:11px;letter-spacing:.06em}
 .orientation{left:15px}
 .orientation [data-icon]{color:#e5d29c}
 .view-button{right:15px;padding:7px 8px;font-size:14px}
 .view-button:hover{background:#263e36}
+.view-button[aria-pressed="true"]{color:var(--gold)}
+.view-status{right:56px;min-height:31px;pointer-events:none}
 .aim{position:absolute;top:50%;left:50%;width:13px;height:13px;translate:-50% -50%;pointer-events:none;display:none;filter:drop-shadow(0 1px 1px #142321)}
 .in-game .aim{display:block}
 .aim::before,.aim::after{content:"";position:absolute;background:#fff6ddc7;border-radius:1px}
@@ -98,6 +100,7 @@ kbd{font:600 10px/1.2 var(--sans);display:inline-block;text-align:center;min-wid
 .map-key{display:flex;align-items:center;gap:6px;color:#aeb8a8;font-size:10px;margin:8px 0 10px}
 .key-player,.key-spot{background:#c6e1cb;border-radius:50%;width:7px;height:7px}
 .key-spot{background:#e9c985;margin-left:9px}
+.key-trail{border-top:2px dashed #ccb48b;width:14px;margin-left:9px}
 .spot-list{display:grid;gap:5px}
 .spot{width:100%;display:flex;align-items:center;text-align:left;gap:9px;padding:7px 8px;border:1px solid transparent;border-top-color:#364134;background:#252c24;border-radius:6px}
 .spot:hover,.spot[aria-pressed="true"]{background:#333d2d;border-color:#657350}

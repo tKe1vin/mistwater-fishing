@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
 const WATER_Y = 0;
+const MAX_WADE_DEPTH = 0.65;
 const LAKE_X = 39.5;
 const LAKE_Z = 37;
 const TAU = Math.PI * 2;
@@ -11,12 +12,16 @@ const spots = [
   { id: 'dock', name: '松木棧橋', x: 5, z: 29, label: '松木棧橋', depth: 3.8, description: '棧橋伸入開闊湖面，適合遠投。' },
   { id: 'inlet', name: '蘆葦淺灣', x: -38.4, z: 19, label: '蘆葦淺灣', depth: 1.8, description: '微風吹過蘆葦，淺水適合短投。' },
   { id: 'rocks', name: '岩岸深潭', x: 37, z: 16.6, label: '岩岸深潭', depth: 6.8, description: '裸岩旁水深變化大，常有大魚巡游。' },
+  { id: 'north', name: '北岸松林', x: -5, z: -40, label: '北岸松林', depth: 3.2, description: '松林外的緩坡可沿岸探索，往南拋投會逐漸進入深水。' },
 ];
 
 const path = [
   [-50, 8], [-45, 13], [-40, 17], [-38, 22], [-36, 28], [-30, 34],
   [-22, 39], [-12, 41], [-3, 40], [5, 39], [14, 40], [23, 37],
-  [31, 31], [36, 25], [39, 18], [42, 10], [48, 3],
+  [31, 31], [36, 25], [39, 18], [43.9, 17], [45, 10], [48, 3],
+  [50, -8], [45, -21], [39, -30], [30, -39], [19, -43], [7, -44],
+  [-5, -40], [-19, -44], [-32, -43], [-43, -36], [-49, -26], [-51, -15],
+  [-53, -4], [-50, 8],
 ];
 
 const sunDirection = new THREE.Vector3(-0.38, 0.155, -0.912).normalize();
@@ -93,6 +98,10 @@ function groundHeight(x, z) {
 
 function isDock(x, z) {
   return x >= 3.07 && x <= 6.93 && z >= 27.4 && z <= 39.0;
+}
+
+function wadeDepthAt(x, z) {
+  return isDock(x, z) ? 0 : Math.max(0, WATER_Y - groundHeight(x, z));
 }
 
 function isFishWater(x, z) {
@@ -460,7 +469,7 @@ function instance(mesh, index, x, y, z, sx, sy, sz, rotation, color) {
 function buildTrees(scene, blockers) {
   const random = prng(97103);
   const trees = [];
-  const reserved = [[5, 37, 4], [5, 29, 5], [-38.4, 19, 2.55], [37, 16.6, 3.2]];
+  const reserved = [[5, 37, 4], [5, 29, 5], [-38.4, 19, 2.55], [37, 16.6, 3.2], [-5, -40, 2.65]];
   for (let attempt = 0; attempt < 1850; attempt++) {
     const x = lerp(-103, 103, random());
     const z = lerp(-93, 76, random());
@@ -664,7 +673,7 @@ function buildDock(scene) {
     }
   }
 
-  for (const [x, z, sign, heading] of [[7.36,38.78,5,0],[-39.6,19.2,1,-.7],[37.8,17.6,3,.46]]) {
+  for (const [x, z, sign, heading] of [[7.36,38.78,5,0],[-39.6,19.2,1,-.7],[37.8,17.6,3,.46],[-6.6,-41.45,2,Math.PI]]) {
     const signGroup = new THREE.Group();
     signGroup.position.set(x, groundHeight(x,z), z);
     signGroup.rotation.y = heading;
@@ -771,9 +780,11 @@ export function createWorld(scene) {
     bounds,
     spawn,
     spots,
+    trail: path,
     isWater,
     isFishWater,
     depthAt,
+    wadeDepthAt,
     spotAt,
     heightAt(x, z) {
       return isDock(x, z) ? .55 : groundHeight(x,z);
@@ -781,7 +792,7 @@ export function createWorld(scene) {
     canMove(x, z) {
       if (x < bounds.minX || x > bounds.maxX || z < bounds.minZ || z > bounds.maxZ) return false;
       if (isDock(x, z)) return true;
-      if (shoreDistance(x,z) < .02) return false;
+      if (wadeDepthAt(x, z) > MAX_WADE_DEPTH) return false;
       return !blockers.some((obstacle) => (x - obstacle.x) ** 2 + (z - obstacle.z) ** 2 < obstacle.r ** 2);
     },
     update(time) {

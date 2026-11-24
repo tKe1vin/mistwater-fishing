@@ -468,7 +468,8 @@ export function createFishing(scene, camera, world, {
   function chooseFish() {
     const spot = world.spotAt?.(target.x, target.z)?.id;
     const locationWeights = spot === 'dock' ? [1.05, 1.25, 1, 1.24]
-      : spot === 'rocks' ? [1.37, 0.81, 1.44, 0.71] : [0.82, 1.55, 1, 1.2];
+      : spot === 'rocks' ? [1.37, 0.81, 1.44, 0.71]
+      : spot === 'north' ? [1.3, 1.15, 0.95, 1.08] : [0.82, 1.55, 1, 1.2];
     const weights = SPECIES.map((species, index) =>
       Math.exp(-Math.abs(state.depth - species.depth) * 0.34) * locationWeights[index] + 0.11);
     let roll = rng() * weights.reduce((total, weight) => total + weight, 0);
