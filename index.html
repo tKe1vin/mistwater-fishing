@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#161a17">
+  <meta name="description" content="在山林湖泊自由探索、拋竿並與上鉤的魚周旋。">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%232a3026'/%3E%3Cpath d='M7 20q4-4 8 0t8 0t8 0t8 0M7 28q4-4 8 0t8 0t8 0t8 0M7 36q4-4 8 0t8 0t8 0t8 0' fill='none' stroke='%23ead397' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+  <title>霧灣垂釣 · Mistwater Fishing</title>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" data-icon="waves" aria-hidden="true"></span>
+        <div><h1>霧灣垂釣</h1><span class="wordmark">MISTWATER FISHING</span></div>
+      </div>
+      <div class="actions">
+        <button class="button sound-button" type="button" data-sound aria-pressed="true" aria-label="關閉音效"><span data-icon="volume-2"></span><span class="header-label">音效</span></button>
+        <button class="button" type="button" data-help><span data-icon="circle-help"></span><span class="header-label">操作</span></button>
+        <button class="button journal-button" type="button" data-open-journal><span data-icon="book-open"></span><span>漁獲日誌</span><span class="journal-count" data-count>0</span></button>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <section class="play" aria-label="3D 釣魚遊戲">
+        <div class="play-head">
+          <div class="lake-title"><span class="location-icon" data-icon="map-pin"></span><span>松影湖</span></div>
+          <span class="conditions"><span data-icon="sunset"></span> 傍晚 <span class="separator"></span> <span data-icon="wind"></span> 微風</span>
+        </div>
+        <div class="stage" data-stage data-phase="ready" aria-label="松影湖遊戲畫面">
+          <div class="render" data-render></div>
+          <div class="film-mask"></div>
+          <div class="orientation">
+            <span data-icon="navigation"></span>
+            <span data-compass>北 · 000°</span>
+          </div>
+          <span class="aim" data-aim aria-hidden="true"></span>
+          <button class="view-button" type="button" data-look title="鎖定視角" aria-label="鎖定視角"><span data-icon="scan-line"></span></button>
+          <div class="briefing" data-briefing>
+            <div class="briefing-kicker"><span></span> 松影湖自然保護區</div>
+            <div class="briefing-title">霧灣垂釣</div>
+            <p>沿著湖岸找個好位置，拋下一竿。</p>
+            <button type="button" class="start-button" data-start>開始垂釣 <span data-icon="arrow-up-right"></span></button>
+          </div>
+          <div class="hud" data-hud hidden>
+            <div class="hud-heading">
+              <span class="phase-icon" data-phase-icon data-icon="fish"></span>
+              <div><div class="phase-title" data-phase-title>準備拋竿</div><div class="phase-text" data-phase-text>朝水面按住空白鍵蓄力。</div></div>
+            </div>
+            <div class="hud-metrics" data-metrics hidden>
+              <div class="meter" data-power hidden>
+                <div class="meter-label">拋竿力度 <span data-power-text>0%</span></div>
+                <div class="meter-track" data-meter="power" role="meter" aria-label="拋竿力度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>
+              </div>
+              <div class="meters-fight" data-fight hidden>
+                <div class="meter">
+                  <div class="meter-label">魚線張力 <span data-tension-text>0%</span></div>
+                  <div class="meter-track" data-meter="tension" role="meter" aria-label="魚線張力" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>
+                </div>
+                <div class="meter">
+                  <div class="meter-label">魚的體力 <span data-stamina-text>100%</span></div>
+                  <div class="meter-track" data-meter="stamina" role="meter" aria-label="魚的體力" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><i></i></div>
+                </div>
+              </div>
+              <div class="telemetry" data-telemetry hidden><span data-line-distance></span><span data-depth></span></div>
+            </div>
+          </div>
+          <div class="catch-toast" data-catch hidden>
+            <span class="catch-icon" data-icon="fish"></span>
+            <div><b data-catch-name></b><span data-catch-details></span></div>
+            <button type="button" class="close-catch" data-close-catch aria-label="關閉漁獲通知"><span data-icon="x"></span></button>
+          </div>
+          <div class="touch-controls" data-touch hidden>
+            <div class="touch-dpad">
+              <button data-move="KeyW" class="touch-up" aria-label="向前">↑</button>
+              <button data-move="KeyA" class="touch-left" aria-label="向左">←</button>
+              <button data-move="KeyS" class="touch-down" aria-label="向後">↓</button>
+              <button data-move="KeyD" class="touch-right" aria-label="向右">→</button>
+            </div>
+            <button class="touch-fish" data-fish-button aria-label="操作釣竿"><span data-icon="fish"></span></button>
+          </div>
+          <div class="load-error" data-error hidden>無法啟動 3D 畫面。請使用支援 WebGL 2 的瀏覽器並開啟硬體加速。</div>
+        </div>
+        <div class="controls">
+          <div class="controls-title"><span data-icon="keyboard"></span> 操作</div>
+          <div><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span> 移動</div>
+          <div><span><kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd></span> 轉視角</div>
+          <div><kbd class="wide-key">空白鍵</kbd> 拋竿／揚竿／收線</div>
+          <div><kbd class="wide-key">R</kbd> 收回魚線</div>
+        </div>
+      </section>
+
+      <aside class="side" aria-label="湖區地圖與釣點">
+        <section class="map-card">
+          <div class="panel-title">
+            <span class="panel-icon" data-icon="map"></span>
+            <div><h2>湖區地圖</h2><span>松影湖 · 釣點導覽</span></div>
+          </div>
+          <div class="map-frame">
+            <canvas width="570" height="426" data-map role="img" aria-label="松影湖地圖，標示玩家位置與三處釣點"></canvas>
+            <div class="map-north">N<span data-icon="navigation"></span></div>
+            <div class="map-scale" data-scale>20 m</div>
+          </div>
+          <div class="map-key"><span class="key-player"></span> 目前位置 <span class="key-spot"></span> 釣點</div>
+          <div class="spot-list" data-spots aria-label="選擇要追蹤的釣點"></div>
+        </section>
+        <section class="tip-card">
+          <span class="panel-icon" data-icon="lightbulb"></span>
+          <div><h2>看浮標，別急著收線</h2><p>等浮標沉下去再揚竿。魚拉得越用力，越要適時鬆手，讓魚線張力下降。</p></div>
+        </section>
+      </aside>
+    </main>
+    <footer class="footer"><span data-current-spot>松木棧橋</span><span data-coordinate></span></footer>
+  </div>
+
+  <dialog class="dialog" data-help-dialog>
+    <div class="dialog-head"><div><span data-icon="keyboard"></span><h2>釣魚操作</h2></div><button class="icon-button" type="button" data-dismiss aria-label="關閉"><span data-icon="x"></span></button></div>
+    <dl class="help-list">
+      <div><dt>找釣點</dt><dd>用 <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 沿岸走。用方向鍵或按住滑鼠右鍵拖曳轉動視角。觸控螢幕可滑動畫面。</dd></div>
+      <div><dt>拋竿</dt><dd>讓準星朝向湖面，按住 <kbd>空白鍵</kbd> 或滑鼠左鍵蓄力，再鬆開將浮標拋入水中。</dd></div>
+      <div><dt>揚竿</dt><dd>浮標會隨水漂動。等浮標明顯沉下，看到「魚上鉤了」再按一下 <kbd>空白鍵</kbd>。</dd></div>
+      <div><dt>收線</dt><dd>按住 <kbd>空白鍵</kbd> 收線。魚線張力升高時放開，等張力降低再收。用 <kbd>R</kbd> 可收回魚線。</dd></div>
+    </dl>
+  </dialog>
+
+  <dialog class="dialog" data-journal>
+    <div class="dialog-head"><div><span data-icon="book-open"></span><h2>漁獲日誌</h2></div><button class="icon-button" type="button" data-dismiss aria-label="關閉"><span data-icon="x"></span></button></div>
+    <div class="journal-summary"><span>累計漁獲 <b data-total>0 尾</b></span><span>最大重量 <b data-best>—</b></span></div>
+    <div class="journal-list" data-journal-list></div>
+  </dialog>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
