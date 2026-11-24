@@ -2,6 +2,10 @@
 
 在松影湖沿岸步行，選擇松木棧橋、蘆葦淺灣、岩岸深潭或其他可到達的岸邊。魚種、咬鉤時間和拉力會隨水深與釣點改變。漁獲日誌會記在目前瀏覽器。
 
+- [線上遊玩](https://tke1vin.github.io/mistwater-fishing/)
+- [實機示範影片（MP4）](https://tke1vin.github.io/mistwater-fishing/downloads/mistwater-fishing-demo.mp4)
+- [離線遊戲（ZIP）](https://tke1vin.github.io/mistwater-fishing/downloads/mistwater-fishing-offline.zip)。解壓縮後，用瀏覽器開啟其中的 HTML。
+
 ## 操作
 
 | 操作 | 操控 |
